@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Course Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="./course.css" />
+
+    <!-- Vue with compiler build -->
+    <script defer src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script defer src="./course.js"></script>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <!-- Top nav -->
+      <nav class="topnav">
+        <div class="container nav-inner">
+          <div class="brand" aria-label="Brand logo"></div>
+          <div class="nav-links">
+            <a href="../home/index.html">Courses</a>
+            <a href="#">Apply</a>
+            <a href="#">Student Life</a>
+            <a href="#">Contact</a>
+            <span aria-hidden="true">🔍</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile sticky apply bar -->
+      <div class="apply-sticky">
+        <div class="container">
+          <button class="btn-primary w-full">Apply</button>
+        </div>
+      </div>
+
+      <!-- Breadcrumbs -->
+      <div class="container breadcrumbs">
+        <a href="#">Home</a>
+        <span aria-hidden="true">›</span>
+        <a href="../home/index.html">Courses</a>
+        <span aria-hidden="true">›</span>
+        <span class="crumb-current">{{ course.title || 'Course Title' }}</span>
+      </div>
+
+      <!-- Tabs row -->
+      <div class="container tabs-row" role="tablist" aria-label="Course tabs">
+        <div class="tabs-scroll">
+          <button :class="tabClass('overview')"  @click="setTab('overview')">Overview</button>
+          <button :class="tabClass('fees')"      @click="setTab('fees')">Fees</button>
+          <button :class="tabClass('entry')"     @click="setTab('entry')">Entry</button>
+          <button :class="tabClass('rpl')"       @click="setTab('rpl')">RPL</button>
+          <button :class="tabClass('support')"   @click="setTab('support')">Support</button>
+        </div>
+
+        <div class="tabs-cta">
+          <button class="btn-primary">Apply</button>
+        </div>
+      </div>
+
+      <main class="container page">
+        <!-- Header Card -->
+        <section class="panel">
+          <div class="header-grid">
+            <div class="header-left">
+              <div class="uni-tag shimmer"></div>
+              <h1 class="course-title">{{ course.title || 'Course Title Placeholder' }}</h1>
+            </div>
+          </div>
+
+<div class="facts-grid">
+  <fact-card label="Study Mode"  :value="course.studyMode"></fact-card>
+  <fact-card label="Duration"    :value="course.duration"></fact-card>
+  <fact-card label="Workload"    :value="course.workload"></fact-card>
+  <fact-card label="Fees"        :value="formattedFees"></fact-card>
+  <fact-card label="Start Dates" :value="course.startDates"></fact-card>
+</div>
+
+        </section>
+
+        <!-- Can I Apply? -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Can I Apply?</h2>
+            <span v-if="course.isInternational" class="chip">International</span>
+          </div>
+          <ul class="bullets">
+            <li v-for="(point, i) in course.applyPoints" :key="i">{{ point }}</li>
+          </ul>
+        </section>
+
+<!-- Accordions -->
+<ui-accordion title="Course Structure" :open-by-default="true">
+  <ul class="bullets">
+    <li><strong>Year 1:</strong> Programming 1, Web Foundations, Databases.</li>
+    <li><strong>Year 2:</strong> Data Structures, Networks, UX & Front-end.</li>
+    <li><strong>Year 3:</strong> Electives + Industry capstone project.</li>
+  </ul>
+</ui-accordion>
+
+<ui-accordion title="Recognition of Prior Learning (RPL)">
+  <p class="para">You may receive credit for prior study or work experience.</p>
+  <ul class="bullets">
+    <li>Provide official transcripts/certificates.</li>
+    <li>Include unit outlines or subject descriptors.</li>
+    <li>Submit a brief CV and any portfolio evidence.</li>
+  </ul>
+</ui-accordion>
+
+<ui-accordion title="Tuition Fees" :open-by-default="true">
+  <p class="muted">Amounts are indicative and depend on your study load and residency.</p>
+  <ul class="bullets">
+    <li><strong>Domestic:</strong> {{ formattedFees }}</li>
+    <li><strong>International:</strong> AUD 42,000 per year (indicative).</li>
+    <li>FEE-HELP and payment plans may be available.</li>
+  </ul>
+</ui-accordion>
+
+<ui-accordion title="Career Outcomes">
+  <ul class="bullets">
+    <li>Software Developer / Full-stack Engineer</li>
+    <li>Data / Business Analyst</li>
+    <li>Systems or Cloud Administrator</li>
+    <li>QA / Test Engineer</li>
+  </ul>
+</ui-accordion>
+
+<ui-accordion title="Support Services">
+  <ul class="bullets">
+    <li>24/7 student support and live chat</li>
+    <li>Study coaches & academic skills workshops</li>
+    <li>Accessibility and wellbeing services</li>
+    <li>Library, databases, and citation tools</li>
+  </ul>
+</ui-accordion>
+
+
+        <!-- Compare Courses (skeleton) -->
+        <section class="panel">
+          <h2 class="panel-title">Compare Courses</h2>
+          <div class="compare">
+            <div class="row" v-for="n in 4" :key="n">
+              <div class="cell shimmer"></div>
+              <div class="cell shimmer"></div>
+              <div class="cell shimmer"></div>
+              <div class="cell shimmer"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container footer-grid">
+          <div class="foot-col">
+            <div class="foot-title shimmer"></div>
+            <div class="foot-line shimmer"></div>
+            <div class="foot-line shimmer"></div>
+          </div>
+          <div class="foot-col">
+            <div class="foot-title shimmer"></div>
+            <div class="foot-line shimmer"></div>
+            <div class="foot-line shimmer"></div>
+          </div>
+          <div class="foot-col">
+            <div class="foot-title shimmer"></div>
+            <div class="foot-line shimmer"></div>
+            <div class="foot-line shimmer"></div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

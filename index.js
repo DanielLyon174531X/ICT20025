@@ -86,9 +86,13 @@ function createVueAppConfig() {
       loadMore() {
         this.visibleCount = Math.min(this.visibleCount + 3, this.currentCourses.length);
       },
-      onViewDetails(course) {
-        alert(`Open details for: ${course.title}`);
-      }
+    onViewDetails(course) {
+    const url = new URL("../course/course.html", window.location.href);
+    url.searchParams.set("id", course.id);
+    url.searchParams.set("title", course.title);
+    window.location.href = url.toString();
+    }
+
     }
   };
 }
