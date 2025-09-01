@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Find Your Perfect Course</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="./index.css" />
+
+    <!-- Vue with compiler build -->
+    <script defer src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script defer src="./index.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- NAVIGATION -->
+      <nav class="nav" aria-label="Primary">
+        <div class="container nav-inner">
+          <div class="brand" role="img" aria-label="Brand logo placeholder"></div>
+          <div class="nav-links">
+            <a href="#" class="nav-link">Courses</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Contact</a>
+            <span role="img" aria-label="Search">🔍</span>
+            <a href="#" class="login">Login</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- HERO -->
+      <header class="hero">
+        <div class="container hero-inner">
+          <h1>Find Your Perfect Course</h1>
+          <p>Choose your path and discover courses tailored to your journey</p>
+        </div>
+      </header>
+
+      <!-- AUDIENCE PATHS -->
+      <section class="container section" aria-labelledby="choose-path">
+        <h2 id="choose-path">Choose Your Path</h2>
+        <p class="section-sub">
+          Select the option that best describes you to see relevant courses
+        </p>
+
+        <div class="grid" role="list">
+          <button
+            v-for="c in cards"
+            :key="c.id"
+            class="card"
+            @click="openModal(c.id)"
+            :aria-labelledby="`${c.id}-title`"
+            :aria-describedby="`${c.id}-subtitle`"
+          >
+            <span class="icon-wrap">
+              <CapIcon v-if="c.icon==='cap'" />
+              <BriefcaseIcon v-else-if="c.icon==='briefcase'" />
+              <GlobeIcon v-else-if="c.icon==='globe'" />
+              <UserIcon v-else />
+            </span>
+            <h3 :id="`${c.id}-title`">{{ c.title }}</h3>
+            <p :id="`${c.id}-subtitle`">{{ c.subtitle }}</p>
+          </button>
+        </div>
+      </section>
+
+      <!-- MODAL -->
+      <div
+        v-show="showModal"
+        class="modal"
+        aria-modal="true"
+        role="dialog"
+        aria-labelledby="modal-title"
+      >
+        <div class="modal-backdrop" @click="closeModal"></div>
+
+        <div class="modal-panel" tabindex="-1" @keydown.esc="closeModal">
+          <header class="modal-header">
+            <h2 id="modal-title">Recommended Courses — {{ audienceTitle }}</h2>
+            <button class="btn-close" @click="closeModal" aria-label="Close">✕</button>
+          </header>
+
+          <p class="modal-sub">Based on your selected path</p>
+
+          <div class="cards">
+            <div v-for="c in visibleCourses" :key="c.id" class="reccard">
+              <div class="reccard-img shimmer" aria-hidden="true">Course Image</div>
+              <h3>{{ c.title }}</h3>
+              <p class="course-blurb">{{ c.blurb }}</p>
+              <button class="btn-secondary" @click="onViewDetails(c)">
+                View Details
+              </button>
+            </div>
+          </div>
+
+          <div class="load-more-wrap" v-if="visibleCount < currentCourses.length">
+            <button class="btn-secondary" @click="loadMore">Load More Courses</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
