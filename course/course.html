@@ -2,57 +2,55 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Course Details</title>
+    <title>Course Details — Bachelor of ICT (Software Technology)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="stylesheet" href="./course.css" />
 
     <!-- Vue with compiler build -->
     <script defer src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Static-data app config -->
     <script defer src="./course.js"></script>
   </head>
   <body>
     <div id="app" v-cloak>
-      <!-- Top nav -->
-      <nav class="topnav">
-        <div class="container nav-inner">
-          <div class="brand" aria-label="Brand logo"></div>
-          <div class="nav-links">
-            <a href="../home/index.html">Courses</a>
-            <a href="#">Apply</a>
-            <a href="#">Student Life</a>
-            <a href="#">Contact</a>
-            <span aria-hidden="true">🔍</span>
-          </div>
-        </div>
-      </nav>
+<!-- Top nav -->
+<nav class="topnav" aria-label="Primary">
+  <div class="container nav-inner">
+    <a class="brand" href="../home/index.html" aria-label="Swinburne home">
+      <img class="brand-logo" src="./assets/logo-long-full.svg" alt="Swinburne University of Technology" />
+    </a>
 
-      <!-- Mobile sticky apply bar -->
-      <div class="apply-sticky">
-        <div class="container">
-          <button class="btn-primary w-full">Apply</button>
-        </div>
-      </div>
+    <div class="nav-links">
+      <a href="../home/index.html">Courses</a>
+      <a href="#">Apply</a>
+      <a href="#">Student Life</a>
+      <a href="#">Contact</a>
 
-      <!-- Breadcrumbs -->
-      <div class="container breadcrumbs">
-        <a href="#">Home</a>
-        <span aria-hidden="true">›</span>
-        <a href="../home/index.html">Courses</a>
-        <span aria-hidden="true">›</span>
-        <span class="crumb-current">{{ course.title || 'Course Title' }}</span>
-      </div>
+      <!-- search button -->
+      <button @click="toggleSearch" class="icon-btn" aria-label="Search" aria-expanded="{{ showSearch ? 'true':'false' }}">
+        🔍
+      </button>
+    </div>
+
+    <!-- search dropdown -->
+    <div v-if="showSearch" class="search-bar" role="search">
+      <input type="search" placeholder="Search courses…" aria-label="Search courses" />
+    </div>
+  </div>
+</nav>
+
 
       <!-- Tabs row -->
       <div class="container tabs-row" role="tablist" aria-label="Course tabs">
         <div class="tabs-scroll">
-          <button :class="tabClass('overview')"  @click="setTab('overview')">Overview</button>
-          <button :class="tabClass('fees')"      @click="setTab('fees')">Fees</button>
-          <button :class="tabClass('entry')"     @click="setTab('entry')">Entry</button>
-          <button :class="tabClass('rpl')"       @click="setTab('rpl')">RPL</button>
-          <button :class="tabClass('support')"   @click="setTab('support')">Support</button>
+          <button :class="tabClass('overview')" @click="goto('overview')">Overview</button>
+          <button :class="tabClass('fees')"     @click="goto('fees')">Fees</button>
+          <button :class="tabClass('entry')"    @click="goto('entry')">Entry</button>
+          <button :class="tabClass('rpl')"      @click="goto('rpl')">RPL</button>
+          <button :class="tabClass('support')"  @click="goto('support')">Support</button>
         </div>
-
+        
         <div class="tabs-cta">
           <button class="btn-primary">Apply</button>
         </div>
@@ -63,109 +61,313 @@
         <section class="panel">
           <div class="header-grid">
             <div class="header-left">
-              <div class="uni-tag shimmer"></div>
+             
               <h1 class="course-title">{{ course.title || 'Course Title Placeholder' }}</h1>
+              <p class="course-blurb">
+  Build real-world software skills across web, mobile, cloud and data. Learn through studios and industry projects, with options for professional placements and flexible study modes.
+</p>
             </div>
           </div>
 
-<div class="facts-grid">
-  <fact-card label="Study Mode"  :value="course.studyMode"></fact-card>
-  <fact-card label="Duration"    :value="course.duration"></fact-card>
-  <fact-card label="Workload"    :value="course.workload"></fact-card>
-  <fact-card label="Fees"        :value="formattedFees"></fact-card>
-  <fact-card label="Start Dates" :value="course.startDates"></fact-card>
-</div>
-
+          <div class="facts-grid">
+            <fact-card label="Study Mode"  :value="course.studyMode"></fact-card>
+            <fact-card label="Duration"    :value="course.duration"></fact-card>
+            <fact-card label="Workload"    :value="course.workload"></fact-card>
+            <fact-card label="Fees"        :value="formattedFees"></fact-card>
+            <fact-card label="Start Dates" :value="course.startDates"></fact-card>
+          </div>
         </section>
 
         <!-- Can I Apply? -->
-        <section class="panel">
+        <section id="entry" class="panel">
           <div class="panel-header">
             <h2>Can I Apply?</h2>
-            <span v-if="course.isInternational" class="chip">International</span>
+            <span v-if="course.isInternational" class="chip">International Eligible</span>
           </div>
           <ul class="bullets">
             <li v-for="(point, i) in course.applyPoints" :key="i">{{ point }}</li>
           </ul>
         </section>
 
-<!-- Accordions -->
-<ui-accordion title="Course Structure" :open-by-default="true">
-  <ul class="bullets">
-    <li><strong>Year 1:</strong> Programming 1, Web Foundations, Databases.</li>
-    <li><strong>Year 2:</strong> Data Structures, Networks, UX & Front-end.</li>
-    <li><strong>Year 3:</strong> Electives + Industry capstone project.</li>
-  </ul>
-</ui-accordion>
+        <!-- Accordions -->
+        <ui-accordion id="structure" title="Course Structure">
+          <p class="para">
+            Successful completion requires <strong>300 credit points</strong>:
+            <strong>8 Core units</strong> + <strong>8 Major units</strong> + <strong>8 Electives</strong>.
+            Each unit is typically <strong>12.5 credit points</strong>.
+          </p>
 
-<ui-accordion title="Recognition of Prior Learning (RPL)">
-  <p class="para">You may receive credit for prior study or work experience.</p>
-  <ul class="bullets">
-    <li>Provide official transcripts/certificates.</li>
-    <li>Include unit outlines or subject descriptors.</li>
-    <li>Submit a brief CV and any portfolio evidence.</li>
-  </ul>
-</ui-accordion>
+          <!-- Year 1 -->
+          <ui-accordion title="Year 1 – Semester 1" :open-by-default="true">
+            <ul class="bullets">
+              <li><strong>COS10005</strong> — Web Development (Core, 12.5 cp)</li>
+              <li><strong>ICT10022</strong> — ICT Inquiry Project (Core, 12.5 cp)</li>
+              <li><strong>TNE10005</strong> — Network Administration (Core, 12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+            </ul>
+          </ui-accordion>
 
-<ui-accordion title="Tuition Fees" :open-by-default="true">
-  <p class="muted">Amounts are indicative and depend on your study load and residency.</p>
-  <ul class="bullets">
-    <li><strong>Domestic:</strong> {{ formattedFees }}</li>
-    <li><strong>International:</strong> AUD 42,000 per year (indicative).</li>
-    <li>FEE-HELP and payment plans may be available.</li>
-  </ul>
-</ui-accordion>
+          <ui-accordion title="Year 1 – Semester 2">
+            <ul class="bullets">
+              <li><strong>COS10009</strong> — Introduction to Programming (Core, 12.5 cp)</li>
+              <li><strong>COS10025</strong> — Technology in an Indigenous Context Project (Core, 12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+            </ul>
+          </ui-accordion>
 
-<ui-accordion title="Career Outcomes">
-  <ul class="bullets">
-    <li>Software Developer / Full-stack Engineer</li>
-    <li>Data / Business Analyst</li>
-    <li>Systems or Cloud Administrator</li>
-    <li>QA / Test Engineer</li>
-  </ul>
-</ui-accordion>
+          <!-- Year 2 -->
+          <ui-accordion title="Year 2 – Semester 1">
+            <ul class="bullets">
+              <li><strong>ICT20025</strong> — ICT Design Project (Major, 12.5 cp)</li>
+              <li><strong>COS20007</strong> — Object Oriented Programming (Major, 12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+            </ul>
+          </ui-accordion>
 
-<ui-accordion title="Support Services">
-  <ul class="bullets">
-    <li>24/7 student support and live chat</li>
-    <li>Study coaches & academic skills workshops</li>
-    <li>Accessibility and wellbeing services</li>
-    <li>Library, databases, and citation tools</li>
-  </ul>
-</ui-accordion>
+          <ui-accordion title="Year 2 – Semester 2">
+            <ul class="bullets">
+              <li><strong>COS20015</strong> — Fundamentals of Data Management (Core, 12.5 cp)</li>
+              <li><strong>COS20019</strong> — Cloud Computing Architecture (Major, 12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+            </ul>
+          </ui-accordion>
 
+          <!-- Professional Placement -->
+          <ui-accordion title="Professional Placement (Optional)">
+            <p class="para"><strong>Major (12 months)</strong> replaces Year-3 study for the period:</p>
+            <ul class="bullets">
+              <li><strong>WEI20001</strong> — Work Experience in Industry A (Prac, 25 cp)</li>
+              <li><strong>ICT20013</strong> — Integrated Professional Placement A – ICT (Acad, 25 cp)</li>
+              <li><strong>WEI20002</strong> — Work Experience in Industry B (Prac, 25 cp)</li>
+              <li><strong>ICT20014</strong> — Integrated Professional Placement B – ICT (Acad, 25 cp)</li>
+            </ul>
+            <p class="para"><strong>Minor (6 months)</strong> option:</p>
+            <ul class="bullets">
+              <li><strong>WEI20001</strong> — Work Experience in Industry A (Prac, 25 cp)</li>
+              <li><strong>ICT20013</strong> — Integrated Professional Placement A – ICT (Acad, 25 cp)</li>
+            </ul>
+          </ui-accordion>
 
-        <!-- Compare Courses (skeleton) -->
-        <section class="panel">
-          <h2 class="panel-title">Compare Courses</h2>
-          <div class="compare">
-            <div class="row" v-for="n in 4" :key="n">
-              <div class="cell shimmer"></div>
-              <div class="cell shimmer"></div>
-              <div class="cell shimmer"></div>
-              <div class="cell shimmer"></div>
-            </div>
-          </div>
-        </section>
+          <!-- Year 3 -->
+          <ui-accordion title="Year 3 – Semester 1">
+            <ul class="bullets">
+              <li><strong>ICT30017</strong> — ICT Project A (Core, 12.5 cp)</li>
+              <li><strong>COS30045</strong> — Data Visualisation (Major, 12.5 cp)</li>
+              <li><strong>COS30043</strong> — Interface Design and Development (Major, 12.5 cp)</li>
+              <li><strong>Elective</strong> — Any approved elective (12.5 cp)</li>
+            </ul>
+          </ui-accordion>
+
+          <ui-accordion title="Year 3 – Semester 2">
+            <ul class="bullets">
+              <li><strong>ICT30018</strong> — ICT Project B (Core, 12.5 cp)</li>
+              <li><strong>COS30020</strong> — Advanced Web Development (Major, 12.5 cp)</li>
+              <li><strong>COS30017</strong> — Software Development for Mobile Devices (Major, 12.5 cp)</li>
+              <li><strong>ICT30016</strong> — ICT Innovation Project (Major, 12.5 cp)</li>
+            </ul>
+          </ui-accordion>
+
+          <p class="muted para">
+            <em>Notes:</em> Offerings may vary. Use your study plan and course planner to confirm availability.
+          </p>
+        </ui-accordion>
+
+        <ui-accordion id="rpl" title="Recognition of Prior Learning (RPL)">
+          <p class="para">You may receive credit for prior study or work experience.</p>
+          <ul class="bullets">
+            <li>Provide official transcripts/certificates.</li>
+            <li>Include unit outlines or subject descriptors.</li>
+            <li>Submit a brief CV and any portfolio evidence.</li>
+          </ul>
+        </ui-accordion>
+
+        <ui-accordion id="fees" title="Tuition Fees">
+          <p class="muted">Amounts are indicative and depend on your study load and residency.</p>
+          <ul class="bullets">
+            <li><strong>Domestic:</strong> {{ formattedFees }}</li>
+            <li><strong>International:</strong> AUD 42,000 per year (indicative).</li>
+            <li>FEE-HELP and payment plans may be available.</li>
+          </ul>
+        </ui-accordion>
+
+        <ui-accordion id="outcomes" title="Career Outcomes">
+          <ul class="bullets">
+            <li>Software Developer / Full-stack Engineer</li>
+            <li>Data / Business Analyst</li>
+            <li>Cloud / Systems Administrator</li>
+            <li>QA / Test Engineer</li>
+          </ul>
+        </ui-accordion>
+
+        <ui-accordion id="support" title="Support Services">
+          <ul class="bullets">
+            <li>24/7 student support and live chat</li>
+            <li>Study coaches & academic skills workshops</li>
+            <li>Accessibility and wellbeing services</li>
+            <li>Library, databases, and citation tools</li>
+          </ul>
+        </ui-accordion>
+
+<!-- Compare Courses -->
+<section class="panel compare-panel">
+  <h2 class="panel-title">Compare Courses</h2>
+  <div class="compare-table" role="table" aria-label="Compare courses">
+    <div class="compare-row compare-head" role="row">
+      <div class="compare-cell" role="columnheader">Course</div>
+      <div class="compare-cell" role="columnheader">Duration</div>
+      <div class="compare-cell" role="columnheader">Workload</div>
+      <div class="compare-cell" role="columnheader">Indicative Fees</div>
+      <div class="compare-cell" role="columnheader">Study Mode</div>
+    </div>
+
+    <div class="compare-row" role="row">
+      <div class="compare-cell" role="cell"><strong>Bachelor of ICT (Software Dev)</strong></div>
+      <div class="compare-cell" role="cell">3 years full-time</div>
+      <div class="compare-cell" role="cell">12–15 hrs/wk</div>
+      <div class="compare-cell" role="cell">Domestic support available</div>
+      <div class="compare-cell" role="cell">On-campus / Online</div>
+    </div>
+
+    <div class="compare-row" role="row">
+      <div class="compare-cell" role="cell"><strong>Bachelor of Computer Science</strong></div>
+      <div class="compare-cell" role="cell">3 years full-time</div>
+      <div class="compare-cell" role="cell">12–15 hrs/wk</div>
+      <div class="compare-cell" role="cell">$36,000 / year (intl.)</div>
+      <div class="compare-cell" role="cell">On-campus</div>
+    </div>
+
+    <div class="compare-row" role="row">
+      <div class="compare-cell" role="cell"><strong>Master of Data Science</strong></div>
+      <div class="compare-cell" role="cell">2 years full-time</div>
+      <div class="compare-cell" role="cell">10–12 hrs/wk</div>
+      <div class="compare-cell" role="cell">$38,000 / year</div>
+      <div class="compare-cell" role="cell">On-campus / Online</div>
+    </div>
+  </div>
+</section>
+
       </main>
 
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="container footer-grid">
-          <div class="foot-col">
-            <div class="foot-title shimmer"></div>
-            <div class="foot-line shimmer"></div>
-            <div class="foot-line shimmer"></div>
+      <!-- Global Brand Footer -->
+      <footer class="brand-footer" aria-labelledby="brand-footer-heading">
+        <h2 id="brand-footer-heading" class="visually-hidden">Swinburne global footer</h2>
+
+        <!-- Top: logo + social + quick links -->
+        <div class="brand-footer__top container">
+          <div class="brand-footer__aside">
+            <a class="brand-footer__logo" href="https://www.swinburne.edu.au/" aria-label="Swinburne home">
+              <img src="./assets/logo-long-full.svg" alt="Swinburne University of Technology logo" />
+            </a>
+
+            <div class="brand-footer__social">
+              <p class="brand-footer__title">Connect with Swinburne</p>
+              <ul class="social-list" aria-label="Social links">
+                <li><a href="https://www.facebook.com/swinburneuniversityoftechnology" aria-label="Facebook" rel="noopener" target="_blank"><svg viewBox="0 0 448 512" class="icon" aria-hidden="true"><path fill="currentColor" d="M400 32H48A48 48 0 0 0 0 80v352a48 48 0 0 0 48 48h137.3V327.7h-63V256h63v-54.6c0-62.2 37-96.5 93.7-96.5 27.1 0 55.5 4.8 55.5 4.8v61h-31.3c-30.8 0-40.4 19.1-40.4 38.7V256h68.8l-11 71.7h-57.8V480H400a48 48 0 0 0 48-48V80a48 48 0 0 0-48-48z"/></svg><span class="visually-hidden">Facebook</span></a></li>
+                <li><a href="https://twitter.com/swinburne" aria-label="Twitter" rel="noopener" target="_blank"><svg viewBox="0 0 512 512" class="icon" aria-hidden="true"><path fill="currentColor" d="M459.4 151.7c.3 4.6.3 9.1.3 13.7 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.8-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-27.9-18.9-46.7-51-46.7-86.9 0-19.5 5.2-37.4 14.3-53 51.7 63.7 129.3 106 216.4 110.8-1.6-7.8-2.6-15.9-2.6-24 0-58 47-105 105-105 30.2 0 57.5 12.7 76.7 33.1 23.7-4.6 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 21-32.2 39.3-52.6 54.3z"/></svg><span class="visually-hidden">Twitter</span></a></li>
+                <li><a href="https://www.youtube.com/user/swinburne" aria-label="YouTube" rel="noopener" target="_blank"><svg viewBox="0 0 576 512" class="icon" aria-hidden="true"><path fill="currentColor" d="M549.7 124.1c-6.3-23.7-24.8-42.3-48.3-48.6C458.8 64 288 64 288 64S117.2 64 74.6 75.5c-23.5 6.3-42 24.9-48.3 48.6C14.9 166.9 14.9 257.2 14.9 257.2s0 90.3 11.4 133.1c6.3 23.6 24.8 41.5 48.3 47.8C117.2 448 288 448 288 448s170.8 0 213.4-11.5c23.5-6.3 42-24.1 48.3-47.8 11.4-42.8 11.4-133.1 11.4-133.1s0-90.3-11.4-133.1zM232.1 337.6V175.2l142.7 81.2-142.7 81.2z"/></svg><span class="visually-hidden">YouTube</span></a></li>
+                <li><a href="https://www.instagram.com/swinburne/" aria-label="Instagram" rel="noopener" target="_blank"><svg viewBox="0 0 448 512" class="icon" aria-hidden="true"><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9S160.5 370.9 224.1 370.9 339 319.6 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.6-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zM398.8 88.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zM448 163.7c-.7-35.3-9.6-66.6-35.7-92.6C386.2 45 355 36.1 319.7 35.4 282.6 34.7 171.7 34.7 134.6 35.4c-35.3.7-66.5 9.6-92.6 35.7-26.1 26-35 57.3-35.7 92.6C5.6 200.8 5.6 311.7 6.3 348.8c.7 35.3 9.6 66.6 35.7 92.6s57.3 35 92.6 35.7c37.1.7 148 0 185.1-.7 35.3-.7 66.6-9.6 92.6-35.7s35-57.3 35.7-92.6c.7-37.1.7-148 .7-185.1z"/></svg><span class="visually-hidden">Instagram</span></a></li>
+                <li><a href="https://www.linkedin.com/school/swinburne-university-of-technology/" aria-label="LinkedIn" rel="noopener" target="_blank"><svg viewBox="0 0 448 512" class="icon" aria-hidden="true"><path fill="currentColor" d="M100.3 448H7.4V148.9h92.9zM53.8 108.1C24.1 108.1 0 83.5 0 53.8A53.8 53.8 0 1 1 53.8 108.1zM447.9 448h-92.7V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7V448h-92.8V148.9h89.1v40.8h1.3c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3V448z"/></svg><span class="visually-hidden">LinkedIn</span></a></li>
+              </ul>
+
+              <!-- Desktop-only quick links -->
+              <ul class="brand-footer__admin-links admin-desktop" aria-label="Administrative links">
+                <li><a href="/privacy">Privacy</a></li>
+                <li><a href="/accessibility-information">Accessibility</a></li>
+                <li><a href="/index">Index</a></li>
+              </ul>
+            </div>
           </div>
-          <div class="foot-col">
-            <div class="foot-title shimmer"></div>
-            <div class="foot-line shimmer"></div>
-            <div class="foot-line shimmer"></div>
+
+          <!-- Sitemap -->
+          <div class="brand-footer__sitemap">
+            <nav class="sitemap-col" aria-labelledby="footer-about">
+              <h3 id="footer-about">About</h3>
+              <ul>
+                <li><a href="/about/our-university">Our university</a></li>
+                <li><a href="/about/our-structure">Our structure</a></li>
+                <li><a href="/about/strategy-initiatives">Strategies and initiatives</a></li>
+                <li><a href="/about/strategy-initiatives/moondani-toombadool-centre">Moondani Toombadool Centre</a></li>
+                <li><a href="/about/our-university/rankings-ratings">Rankings and ratings</a></li>
+                <li><a href="/about/policies-regulations">Policies and regulations</a></li>
+                <li><a href="/about/our-university/quality-compliance">Quality and compliance</a></li>
+                <li><a href="/swinburne-edge">Swinburne Edge</a></li>
+                <li><a href="https://www.swinburneonline.edu.au/" rel="noopener" target="_blank">Swinburne Online</a></li>
+              </ul>
+            </nav>
+
+            <nav class="sitemap-col" aria-labelledby="footer-contact">
+              <h3 id="footer-contact">Contact us</h3>
+              <ul>
+                <li><a href="https://www.swinburne.edu.au/corporate/feedback/" target="_blank" rel="noopener">Feedback</a></li>
+                <li><a href="/life-at-swinburne/locations">Swinburne campuses</a></li>
+                <li><a href="/news/media-contacts">Media contacts</a></li>
+                <li><a href="/careers-at-swinburne">Careers at Swinburne</a></li>
+              </ul>
+            </nav>
+
+            <nav class="sitemap-col" aria-labelledby="footer-study">
+              <h3 id="footer-study">Study with us</h3>
+              <ul>
+                <li><a href="/life-at-swinburne/why-choose-swinburne">Why study at Swinburne?</a></li>
+                <li><a href="/courses/find-a-course">Find a course</a></li>
+                <li><a href="/courses/fees">Fees</a></li>
+                <li><a href="/courses/applying">Applying</a></li>
+                <li><a href="/life-at-swinburne/international-students">International students</a></li>
+                <li><a href="/courses/visas">Student visas</a></li>
+                <li><a href="/collaboration-partnerships/school-programs">School programs</a></li>
+                <li><a href="/courses/planning-your-future/career-practitioners">Resources for Career Practitioners</a></li>
+                <li><a href="/life-at-swinburne/international-students/information-for-agents">Info for international agents</a></li>
+              </ul>
+            </nav>
+
+            <nav class="sitemap-col" aria-labelledby="footer-student">
+              <h3 id="footer-student">Student resources</h3>
+              <ul>
+                <li><a href="/life-at-swinburne/getting-started-at-swinburne">Getting started at Swinburne</a></li>
+                <li><a href="/life-at-swinburne/student-support-services">Student support services</a></li>
+                <li><a href="/life-at-swinburne/student-support-services/support-for-students-policy">Support for Students Guidelines</a></li>
+                <li><a href="/library">Library</a></li>
+                <li><a href="/student-login/academic-integrity">Academic integrity</a></li>
+                <li><a href="/student-login/reviews-appeals">Reviews and appeals</a></li>
+              </ul>
+            </nav>
+
+            <!-- Mobile-only quick links -->
+            <ul class="brand-footer__admin-links admin-mobile" aria-label="Administrative links (mobile)">
+              <li><a href="/privacy">Privacy</a></li>
+              <li><a href="/accessibility-information">Accessibility</a></li>
+              <li><a href="/index">Index</a></li>
+            </ul>
           </div>
-          <div class="foot-col">
-            <div class="foot-title shimmer"></div>
-            <div class="foot-line shimmer"></div>
-            <div class="foot-line shimmer"></div>
+        </div>
+
+        <!-- Acknowledgement -->
+        <div class="brand-footer__ack container" role="region" aria-labelledby="ack-title">
+          <div class="ack-left">
+            <h3 id="ack-title"><a href="/about/our-university/indigenous-matters/acknowledgement">Indigenous Acknowledgement</a></h3>
+            <p class="ack-text">
+              We respectfully acknowledge the Wurundjeri People, and their Elders past and present, who are the Traditional Owners of the land on which Swinburne's Australian campuses are located in Melbourne's east and outer-east.
+              <a href="/about/our-university/indigenous-matters">Full Indigenous Matters Policy</a>
+            </p>
+          </div>
+          <div class="ack-right">
+            <img src="./assets/indigenous-ack.svg" alt="Australian Aboriginal Flag and Torres Strait Islander flag" />
+          </div>
+        </div>
+
+        <!-- Bottom admin bar -->
+        <div class="brand-footer__bottom">
+          <div class="container brand-footer__bottom-grid">
+            <p>© Swinburne 2025 | <a href="/copyright-disclaimer">Copyright and disclaimer</a></p>
+            <ul class="badges" aria-label="Regulatory identifiers">
+              <li>CRICOS 00111D</li>
+              <li>RTO 3059</li>
+              <li>TEQSA PRV12148 Australian University</li>
+              <li>TOID 3059</li>
+            </ul>
           </div>
         </div>
       </footer>
